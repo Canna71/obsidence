@@ -1,7 +1,10 @@
 import { App, Editor, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting } from 'obsidian';
 
+// import * as markdown2confluence from 'markdown2confluence';
+// import  * as markdown2confluence from 'masrkdown2confluence';
 // Remember to rename these classes and interfaces!
-
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const markdown2confluence = require('markdown2confluence');
 interface MyPluginSettings {
 	mySetting: string;
 }
@@ -16,10 +19,25 @@ export default class MyPlugin extends Plugin {
 	async onload() {
 		await this.loadSettings();
 
+		console.log("Confluwnce Plugin Loaded");
+
 		// This creates an icon in the left ribbon.
-		const ribbonIconEl = this.addRibbonIcon('dice', 'Sample Plugin', (evt: MouseEvent) => {
+		const ribbonIconEl = this.addRibbonIcon('dice', 'Copy to Confluence', (evt: MouseEvent) => {
 			// Called when the user clicks the icon.
-			new Notice('This is a notice!');
+			// new Notice('Hello, world!');
+			const view = this.app.workspace.getActiveViewOfType(MarkdownView);
+			if(view) {
+				const view_mode = view.getMode(); // "preview" or "source" (can also be "live" but I don't know when that happens)
+				console.log(view_mode);
+				const selection = view.editor.getSelection();
+				console.log(selection);
+				if(selection){
+					console.log(markdown2confluence);
+					const converted = markdown2confluence(selection);
+					console.log(converted);
+					navigator.clipboard.writeText(converted);
+				}
+			}
 		});
 		// Perform additional things with the ribbon
 		ribbonIconEl.addClass('my-plugin-ribbon-class');
@@ -79,7 +97,7 @@ export default class MyPlugin extends Plugin {
 	}
 
 	onunload() {
-
+		console.log("Confluence Plugin unloaded");
 	}
 
 	async loadSettings() {

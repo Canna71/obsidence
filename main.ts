@@ -22,11 +22,11 @@ export default class MyPlugin extends Plugin {
 		console.log("Confluence Plugin Loaded");
 
 		// This creates an icon in the left ribbon.
-		const ribbonIconEl = this.addRibbonIcon('documents', 'Copy to Confluence', (evt: MouseEvent) => {
+		const ribbonIconEl = this.addRibbonIcon('documents', 'Copy Note to Confluence/Jira', (evt: MouseEvent) => {
 			// Called when the user clicks the icon.
 			// new Notice('Hello, world!');
 			const view = this.app.workspace.getActiveViewOfType(MarkdownView);
-			this.copyMarkdown(view);
+			this.convertNote(view);
 		});
 		// Perform additional things with the ribbon
 		ribbonIconEl.addClass('confluence-plugin-ribbon-class');
@@ -46,32 +46,31 @@ export default class MyPlugin extends Plugin {
 		// });
 		// This adds an editor command that can perform some operation on the current editor instance
 		this.addCommand({
-			id: 'copy-to-confluence',
-			name: 'Copy to Confluence/Jira',
-			editorCallback: (editor: Editor, view: MarkdownView) => {
+			id: 'copy-note-to-confluence',
+			name: 'Copy whole note to Confluence/Jira',
+			checkCallback: (checking: boolean) => {
 				// console.log(editor.getSelection());
-				this.copyMarkdown(view);
+				
+				const markdownView = this.app.workspace.getActiveViewOfType(MarkdownView);
+				if(markdownView){
+					if (!checking) {
+						this.convertNote(markdownView);
+					}	
+					return true;
+				}
+				return false;
 			}
 		});
-		// This adds a complex command that can check whether the current state of the app allows execution of the command
-		// this.addCommand({
-		// 	id: 'open-sample-modal-complex',
-		// 	name: 'Open sample modal (complex)',
-		// 	checkCallback: (checking: boolean) => {
-		// 		// Conditions to check
-		// 		const markdownView = this.app.workspace.getActiveViewOfType(MarkdownView);
-		// 		if (markdownView) {
-		// 			// If checking is true, we're simply "checking" if the command can be run.
-		// 			// If checking is false, then we want to actually perform the operation.
-		// 			if (!checking) {
-		// 				new SampleModal(this.app).open();
-		// 			}
 
-		// 			// This command will only show up in Command Palette when the check function returns true
-		// 			return true;
-		// 		}
-		// 	}
-		// });
+		// This adds a complex command that can check whether the current state of the app allows execution of the command
+		this.addCommand({
+			id: 'copy-selection-to-confluence',
+			name: 'Copy selection to Confluence/Jira',
+			editorCallback: (editor, view) => {
+				const selection = editor.getSelection();
+				this.copyConvertedContent(selection);
+			}
+		});
 
 		// This adds a settings tab so the user can configure various aspects of the plugin
 		// this.addSettingTab(new SampleSettingTab(this.app, this));
@@ -86,20 +85,24 @@ export default class MyPlugin extends Plugin {
 		// this.registerInterval(window.setInterval(() => console.log('setInterval'), 5 * 60 * 1000));
 	}
 
-	private copyMarkdown(view: MarkdownView | null) {
+	private convertNote(view: MarkdownView | null) {
 		if (view) {
 			// const view_mode = view.getMode(); // "preview" or "source" (can also be "live" but I don't know when that happens)
 			// console.log(view_mode);
 			const content = view.getViewData(); //.sourceMode.cmEditor.getDoc().getValue();
 			// console.log(content);
 			if (content) {
-				const converted = markdown2confluence(content);
-				navigator.clipboard.writeText(converted);
-				new Notice('Content was converted and copied to clipboard.');
+				this.copyConvertedContent(content);
+				new Notice('Note was converted and copied to clipboard.');
 			}
 		}
 	}
 
+
+	private copyConvertedContent(content: string) {
+		const converted = markdown2confluence(content);
+		navigator.clipboard.writeText(converted);
+	}
 
 	onunload() {
 		console.log("Confluence Plugin unloaded");

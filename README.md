@@ -1,4 +1,4 @@
-# Obsidian Confluence/Jira Plugin
+# Obsidence: Obsidian Confluence/Jira Plugin
 
 This simple plugin copy the current note (or a selection if in edit mode) into the format suitable to be pasted into Confluence or Jira preserving the original semantic of the markdown (e.g. code blocks).
 

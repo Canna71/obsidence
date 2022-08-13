@@ -19,7 +19,7 @@ export default class MyPlugin extends Plugin {
 	async onload() {
 		await this.loadSettings();
 
-		console.log("Confluence Plugin Loaded");
+		console.log("Obsidence Plugin Loaded");
 
 		// This creates an icon in the left ribbon.
 		const ribbonIconEl = this.addRibbonIcon('documents', 'Copy Note to Confluence/Jira', (evt: MouseEvent) => {
@@ -29,7 +29,7 @@ export default class MyPlugin extends Plugin {
 			this.convertNote(view);
 		});
 		// Perform additional things with the ribbon
-		ribbonIconEl.addClass('confluence-plugin-ribbon-class');
+		ribbonIconEl.addClass('obsidence-plugin-ribbon-class');
 
 		// This adds a status bar item to the bottom of the app. Does not work on mobile apps.
 		// const statusBarItemEl = this.addStatusBarItem();
@@ -105,7 +105,7 @@ export default class MyPlugin extends Plugin {
 	}
 
 	onunload() {
-		console.log("Confluence Plugin unloaded");
+		console.log("Obsidence Plugin unloaded");
 	}
 
 	async loadSettings() {

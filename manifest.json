@@ -1,6 +1,6 @@
 {
-	"id": "obsidian-sample-plugin",
-	"name": "Obsidian Confluence",
+	"id": "obsidence-plugin",
+	"name": "Obsidence",
 	"version": "1.0.0",
 	"minAppVersion": "0.15.0",
 	"description": "This plugins enables copying from Obsidian into Confluence/Jira",

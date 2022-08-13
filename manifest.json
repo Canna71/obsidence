@@ -3,7 +3,7 @@
 	"name": "Obsidence",
 	"version": "1.0.0",
 	"minAppVersion": "0.15.0",
-	"description": "This plugins enables copying from Obsidian into Confluence/Jira",
+	"description": "This plugin enables copying from Obsidian into Confluence/Jira",
 	"author": "Gabriele Cannata",
 	"authorUrl": "https://github.com/Canna71",
 	"isDesktopOnly": false
